@@ -1,5 +1,5 @@
-const { json } = require('express');
 const Product = require('../Models/modelProducts');
+const ErrorHandler = require('../utils/errorHandler');
 
 // Create Products 
 
@@ -25,10 +25,7 @@ exports.getAllProducts = async (req, res, next) => {
 exports.deleteAProduct = async (req, res, next) => {
     const product = await Product.findById(req.params.id);
     if (!product) {
-        res.status(500).json({
-            success : false,
-            message : "Product Not found"
-        })
+        return next(new ErrorHandler("Product not found", 404));
     }
 
     await product.remove();
@@ -43,10 +40,7 @@ exports.deleteAProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
     let product = await Product.findById(req.params.id);
     if(!product) {
-        res.status(500).json({
-            success : false,
-            message : "Product not found"
-        });
+        return next(new ErrorHandler("Product Not Found", 404));
     }
 
     product = await Product.findOneAndUpdate(req.params.id, req.body, {
@@ -65,10 +59,7 @@ exports.updateProduct = async (req, res, next) => {
 exports.getAProduct = async (req, res, next) => {
     const product = await Product.findById(req.params.id);
     if(!product) {
-        res.status(500).json({
-            success : true,
-            Message : "Product not Found"
-        });
+        return next(new ErrorHandler("Product not found", 404));
     }
     res.status(200).json({
         success : true,

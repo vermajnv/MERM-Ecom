@@ -2,6 +2,7 @@ const app = require('./app');
 const dotenv = require('dotenv')
 const path = require('path');
 const mongoConnect = require('./config/database');
+
 // Config
 
 dotenv.config({path : path.join(__dirname) + '/config/config.env'});

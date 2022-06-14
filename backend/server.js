@@ -3,8 +3,13 @@ const dotenv = require('dotenv')
 const path = require('path');
 const mongoConnect = require('./config/database');
 
+// Handling uncaught exceptions
+process.on("uncaughtException", (error) => {
+    console.log(`Error : ${error.message}`);
+    console.log("Sutting down the server due to uncaught Exception");
+    process.exit(1);
+})
 // Config
-
 dotenv.config({path : path.join(__dirname) + '/config/config.env'});
 
 // Mongo connection

@@ -24,8 +24,11 @@ class ProductHelper {
         const queryCopy = {...this.queryString};
         const removeFields = ["keyword", "page", "limit"];
         removeFields.forEach((value) => delete queryCopy[value]);
-
-        this.query = this.query.find(queryCopy);
+        
+        // Add $ in start of the keys
+        let queryStringify = JSON.stringify(queryCopy);
+        queryStringify = queryStringify.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
+        this.query = this.query.find(JSON.parse(queryStringify));
         return this;
     }
 }

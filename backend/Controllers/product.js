@@ -14,7 +14,7 @@ exports.createProduct = catchAsyncError (async (req, res, mext) => {
 
 // Get all products
 exports.getAllProducts = catchAsyncError (async (req, res, next) => {
-    const productHelper = new ProductHelper(Product, req.query).search().filter();
+    const productHelper = new ProductHelper(Product, req.query).search().filter().paginate(process.env.PAGINATION);
     const products = await productHelper.query;
     res.status(200).json({
         success : true,

@@ -31,6 +31,14 @@ class ProductHelper {
         this.query = this.query.find(JSON.parse(queryStringify));
         return this;
     }
+
+    paginate(dataPerPage) 
+    {
+        const currentPage = (this.queryString.page) * 1 || 1;
+        const skipData = (dataPerPage * currentPage) - dataPerPage;
+        this.query = this.query.limit(dataPerPage).skip(skipData);
+        return this;
+    }
 }
 
 

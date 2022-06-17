@@ -36,7 +36,6 @@ exports.registerUser = catchError (async (req, res, next) => {
 
 exports.loginUser = catchError ( async (req, res, next) => {
     const {email, password} = req.body;
-
     if (!email || !password) {
         return next(new ErrorHandler("Please enter email & password", 400));
     }
@@ -56,5 +55,16 @@ exports.loginUser = catchError ( async (req, res, next) => {
 
     new JwtToken().getToken(res, user, 200, () => {
 
+    });
+});
+
+exports.logoutUser = catchError (async (req, res, next) => {
+    res.cookie('token', "", {
+        httpOnly :true,
+        expire : Date.now()
+    });
+    res.status(200).json({
+        status : true, 
+        message : "Logged Out successfully"
     });
 })

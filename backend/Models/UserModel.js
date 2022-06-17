@@ -61,11 +61,7 @@ userSchema.methods.createJWTToken = async function() {
 }
 
 userSchema.methods.isPasswordMatch = async function(password) {
-    const checkStatus = await bcrypt.compare(password, this.password);
-    if (!checkStatus) {
-        return 0;
-    }
-    return 1;
+    return await bcrypt.compare(password, this.password);
 }
 
 module.exports = mongoose.model('User', userSchema);

@@ -67,4 +67,18 @@ exports.logoutUser = catchError (async (req, res, next) => {
         status : true, 
         message : "Logged Out successfully"
     });
+});
+
+exports.forgotPassword = catchError (async (req, res, next) => {
+    const user = await User.findOne({email : req.body.email});
+    if (!user) {
+        return next(new ErrorHandler("Email not found"));
+    }
+
+    const response = await user.getResetPasswordToken();
+    res.status(200).json({
+        status : "success",
+        message : "Reset email shared on your Email",
+        token : response
+    });
 })

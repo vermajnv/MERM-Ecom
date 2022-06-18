@@ -60,6 +60,24 @@ const productSchema = new mongoose.Schema({
                 required : true
             }  
         }
+    ],
+    user : {
+        type : mongoose.Schema.ObjectId,
+        ref : "User",
+        required : true
+    },
+    updated_by : [
+        {
+            user : {
+                type : mongoose.Schema.ObjectId,
+                ref : "User",
+                default : null
+            },
+            updatedAt : {
+                type : Date,
+                default : Date.now()
+            }
+        },
     ]
 },
 {

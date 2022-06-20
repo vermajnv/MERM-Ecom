@@ -9,6 +9,12 @@ module.exports = (err, req, res, next) => {
         const message = `Resource not found. Invalid : ${err.path}`;
         err = new ErrorHandler(message, 500);
     }
+    if(err.code = 1100)
+    {
+        console.log(err);
+        const message = `Dupplicate key error. Duplicate : ${err}`;
+        err = new ErrorHandler(message, 500);
+    }
     res.status(err.statusCode).json({
         success : false,
         message : (process.env.BUILD === 'dev') ? err.stack : err.message

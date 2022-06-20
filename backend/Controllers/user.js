@@ -103,7 +103,6 @@ exports.forgotPassword = catchError (async (req, res, next) => {
 })
 
 exports.resetPassword = catchAsyncError(async (req, res, next) => {
-    console.log(req.params.token);
     const user = await User.findOne({
         passwordResetToken : req.params.token,
         resetPasswordExpires : {$gt : Date.now()}
@@ -117,7 +116,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
     user.password = req.body.password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
-    await user.save();
+    user.save();
 
     new JwtToken().getToken(res, user, 200);
 });

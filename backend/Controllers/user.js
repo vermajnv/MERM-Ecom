@@ -2,7 +2,7 @@ const User = require('../Models/UserModel');
 const catchError = require('../middleware/catchAsyncError');
 const ErrorHandler = require('../utils/errorHandler');
 const JwtToken = require('../utils/JwtToken');
-
+const SendMail = require('../utils/SendEmail');
 exports.listUsers = catchError( async (req, res, next) => {
     const users = await User.find();
     if (!users) {
@@ -75,10 +75,20 @@ exports.forgotPassword = catchError (async (req, res, next) => {
         return next(new ErrorHandler("Email not found"));
     }
 
-    const response = await user.getResetPasswordToken();
+    const resetToken = await user.getResetPasswordToken();
+    user.save({validateBeforeSave : false});
+
+    const resetPasswordLink = `${req.protocol}://${req.get('host')}/api/v1/reset-password/${resetToken}`;
+    const sendEmail = await new SendMail().send({
+        from : 'nayanrahul.jnv@gmail.com',
+        subject : "Password Reset",
+        text : `Please change your email by clicking the ${resetPasswordLink}`,
+        html : `<h3>Please change your password by clicking the Link <a href="${resetPasswordLink}" >Reset Password</a></h3>`,
+        to : ['nayan@yopmail.com', 'nayanit3031@gmail.com']
+    });
     res.status(200).json({
         status : "success",
         message : "Reset email shared on your Email",
-        token : response
+        token : resetToken
     });
 })

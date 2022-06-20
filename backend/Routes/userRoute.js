@@ -6,6 +6,6 @@ Router.route('/').get(listUsers);
 Router.route('/register').post(registerUser);
 Router.route('/login').post(loginUser);
 Router.route('/logout').get(logoutUser);
-Router.route('/reset-password').post(forgotPassword);
+Router.route('/forgot-password').post(forgotPassword);
 
 module.exports = Router;

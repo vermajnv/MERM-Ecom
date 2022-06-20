@@ -120,3 +120,35 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 
     new JwtToken().getToken(res, user, 200);
 });
+
+
+// Get User details
+
+exports.getUserDetails = catchAsyncError(async (req, res, next) => {
+    const user = await User.findOne({_id : req.user.id});
+    if(!user) {
+        return next(new ErrorHandler("User not found or you are not logged in", 404));
+    }
+
+    res.json({
+        status : true,
+        user
+    });
+});
+
+exports.changePassword = catchAsyncError( async (req, res, next) => {
+    const user = await User.findById(req.user.id).select('+password');
+    console.log(req.body.oldPassword);
+    const isPasswordMatch = await user.isPasswordMatch(req.body.oldPassword);
+    if (!isPasswordMatch) {
+        return next(new ErrorHandler("Old password not matched.", 404));
+    }
+    
+    if(req.body.newPassword !== req.body.confirmPassword)
+    {
+        return next(new ErrorHandler("New password doesn't matches", 404));
+    }
+    user.password = req.body.newPassword;
+    await user.save();
+    new JwtToken().getToken(res, user, 200);
+})

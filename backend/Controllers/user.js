@@ -3,6 +3,7 @@ const catchError = require('../middleware/catchAsyncError');
 const ErrorHandler = require('../utils/errorHandler');
 const JwtToken = require('../utils/JwtToken');
 const SendMail = require('../utils/SendEmail');
+const catchAsyncError = require('../middleware/catchAsyncError');
 exports.listUsers = catchError( async (req, res, next) => {
     const users = await User.find();
     if (!users) {
@@ -79,16 +80,44 @@ exports.forgotPassword = catchError (async (req, res, next) => {
     user.save({validateBeforeSave : false});
 
     const resetPasswordLink = `${req.protocol}://${req.get('host')}/api/v1/reset-password/${resetToken}`;
-    const sendEmail = await new SendMail().send({
-        from : 'nayanrahul.jnv@gmail.com',
-        subject : "Password Reset",
-        text : `Please change your email by clicking the ${resetPasswordLink}`,
-        html : `<h3>Please change your password by clicking the Link <a href="${resetPasswordLink}" >Reset Password</a></h3>`,
-        to : ['nayan@yopmail.com', 'nayanit3031@gmail.com']
-    });
+    try {
+        await new SendMail().send({
+            from : 'nayanrahul.jnv@gmail.com',
+            subject : "Password Reset",
+            text : `Please change your email by clicking the ${resetPasswordLink}`,
+            html : `<h3>Please change your password by clicking the Link <a href="${resetPasswordLink}" >Reset Password</a></h3>`,
+            to : ['nayan@yopmail.com', 'nayanit3031@gmail.com']
+        });
+        
+    } catch (error) {
+        this.resetPasswordToken = undefined;
+        this.resetPasswordExpires = undefined;
+        await user.save({validationBeforeSave : false});    
+        next(new ErrorHandler(error.message, 500));     
+    }
     res.status(200).json({
         status : "success",
         message : "Reset email shared on your Email",
         token : resetToken
     });
 })
+
+exports.resetPassword = catchAsyncError(async (req, res, next) => {
+    console.log(req.params.token);
+    const user = await User.findOne({
+        passwordResetToken : req.params.token,
+        resetPasswordExpires : {$gt : Date.now()}
+    });
+    if(!user) {
+        return next(new ErrorHandler("Reset Pasword link is invalid or Expired"));
+    }
+    if(req.body.password !== req.body.confirmPassword){
+        return next(new ErrorHandler("Password does not matched", 400));
+    }
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    new JwtToken().getToken(res, user, 200);
+});

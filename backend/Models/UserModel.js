@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
     name : {
@@ -22,6 +23,10 @@ const userSchema = new mongoose.Schema({
         minlength : [8, "Atleast required 8 charecters"],
         select : false
     }, 
+    email_verified : {
+        type : Boolean,
+        default : 0
+    },
     avatar : {
         public_id : {
             type : String,
@@ -36,6 +41,8 @@ const userSchema = new mongoose.Schema({
         type : String,
         default : "user"
     },
+    emailVerificationToken : String, 
+    emailVerificationExpires : Date,
     resetPasswordToken : String,
     resetPasswordExpires : Date
 }, 
@@ -64,4 +71,12 @@ userSchema.methods.isPasswordMatch = async function(password) {
     return await bcrypt.compare(password, this.password);
 }
 
+userSchema.methods.getCryptoToken = async function(updateToken, updateExpire) {
+    // generate token
+    const token = crypto.randomBytes(22).toString('hex');
+    // Hasing 
+    this[updateToken] = crypto.createHash("sha256").update(token).digest('hex');
+    this[updateExpire] = Date.now() + 15 * 60 * 1000; 
+    return this[updateToken];
+}
 module.exports = mongoose.model('User', userSchema);

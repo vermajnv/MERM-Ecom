@@ -5,6 +5,7 @@ const ProductHelper = require('../Helpers/Product/ProductHelper');
 // Create Products 
 
 exports.createProduct = catchAsyncError (async (req, res, mext) => {
+    req.body.user = req.user.id;
     const product = await Product.create(req.body);
     res.status(200).json({
         success : true,
@@ -47,6 +48,7 @@ exports.updateProduct = catchAsyncError (async (req, res, next) => {
         return next(new ErrorHandler("Product Not Found", 404));
     }
 
+    req.body.updated_by = {"user" : req.user.id};
     product = await Product.findOneAndUpdate(req.params.id, req.body, {
         new : true, // Returns new collection with updated data
         runValidators : true,

@@ -31,11 +31,10 @@ exports.registerUser = catchError (async (req, res, next) => {
     });
     user.getCryptoToken('emailVerificationToken', 'emailVerificationExpires');
     await user.save({
-        validateBeforeSave : false,
-        new : true
+        validateBeforeSave : true
     });
     
-    const verificationLink = `${req.protocol}://${req.get('host')}/api/v1/user/varify-email/${user.emailVerificationToken}`;
+    const verificationLink = `${req.protocol}://${req.get('host')}/api/v1/user/verify-email/${user.emailVerificationToken}`;
     await sendVerificationEmail(req, res, next, user, verificationLink);
     res.status(200).json({
         status : true,
@@ -57,7 +56,10 @@ exports.loginUser = catchError ( async (req, res, next) => {
     if (!user) {
         return next(new ErrorHandler("Invalid email or password", 401));
     }
-    
+    if (!user.email_verify)
+    {
+        return next(new ErrorHandler("Your email is not verified. Please verify it once.", 401));
+    }
     // isPasswordMatch
     const isPasswordMatch = await user.isPasswordMatch(password);
 
@@ -199,4 +201,35 @@ exports.verifyEmail = catchAsyncError(async (req, res, next) => {
         validateBeforeSave : false
     })
     new JwtToken().getToken(res, user, 200);
-})
+});
+
+// Send verification link
+
+exports.verificationLink = catchAsyncError(async (req, res, next) => {
+    const user = await User.findOne({
+        email : req.body.email,
+    });
+
+    if(!user)
+    {
+        return next(new ErrorHandler("Invalid User", 404));
+    }
+    console.log(user.email_verified);
+    if(user.email_verified)
+    {
+        return next(new ErrorHandler("Email Already verified", 404));
+    }
+
+    user.getCryptoToken('emailVerificationToken', 'emailVerificationExpires');
+    await user.save({
+        validateBeforeSave : false,
+        new : true
+    });
+    
+    const verificationLink = `${req.protocol}://${req.get('host')}/api/v1/user/verify-email/${user.emailVerificationToken}`;
+    await sendVerificationEmail(req, res, next, user, verificationLink);
+    res.status(200).json({
+        status : true,
+        message : "A verification link has been shared on your registered email"
+    });
+});

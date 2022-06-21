@@ -27,6 +27,11 @@ module.exports = (err, req, res, next) => {
         const message = `Dupplicate key error. Duplicate : ${err}`;
         err = new ErrorHandler(message, 500);
     }
+    if(err.name === 'TypeError')
+    {
+        const message = `Error while conversion (Check for await). ${err.message}`;
+        err = new ErrorHandler(message, 401);
+    }
     res.status(err.statusCode).json({
         success : false,
         message : (process.env.BUILD === 'dev') ? err.stack : err.message

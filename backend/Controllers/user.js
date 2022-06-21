@@ -152,3 +152,20 @@ exports.changePassword = catchAsyncError( async (req, res, next) => {
     await user.save();
     new JwtToken().getToken(res, user, 200);
 })
+
+exports.updateProfile = catchAsyncError(async (req, res, next) => {
+    const newUserData = {
+        name : req.body.name,
+        email : req.body.email
+    };
+
+    const user = await User.findByIdAndUpdate({_id : req.user.id}, newUserData, {
+        new : true, 
+        runValidators : true
+    });
+
+    res.json({
+        status : true, 
+        user
+    });
+})

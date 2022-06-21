@@ -203,7 +203,6 @@ exports.verificationLink = catchAsyncError(async (req, res, next) => {
     {
         return next(new ErrorHandler("Invalid User", 404));
     }
-    console.log(user.email_verified);
     if(user.email_verified)
     {
         return next(new ErrorHandler("Email Already verified", 404));
@@ -269,5 +268,27 @@ exports.updateRole = catchAsyncError(async (req, res, next) => {
         message : "User role updated successfully",
         user
     });
-})
+});
+
+
+exports.updateProfileByAdmin = catchAsyncError(async (req, res, next) => {
+    const newUserData = {
+        name : req.body.name,
+        email : req.body.email
+    };
+
+    const user = await User.findByIdAndUpdate({_id : req.body.id}, newUserData, {
+        new : true, 
+        runValidators : true
+    });
+    if(!user) {
+        return next(new ErrorHandler("Invalid data", 400));
+    }
+    
+    res.json({
+        status : true, 
+        user
+    });
+});
+
 

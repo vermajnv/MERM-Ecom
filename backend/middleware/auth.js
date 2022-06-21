@@ -15,6 +15,10 @@ exports.isAuthenticated = catchAsyncError(async (req, res, next) => {
 
 exports.authoriseRole = (...roles) =>{
     return (req, res, next) => {
+        if(!req.user)
+        {
+            return next(new ErrorHandler("You are not authenticated", 400));
+        }
         if(!roles.includes(req.user.role)) {
             return next(new ErrorHandler("You are not authorised for this action"));
         }

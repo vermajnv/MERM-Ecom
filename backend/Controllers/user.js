@@ -6,17 +6,6 @@ const SendMail = require('../utils/SendEmail');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const {sendVerificationEmail} = require('../middleware/auth');
 
-exports.listUsers = catchError( async (req, res, next) => {
-    const users = await User.find();
-    if (!users) {
-        next(new ErrorHandler("No users found", 404));
-    }
-    res.json({
-        status : true,
-        users
-    });
-});
-
 // Register user
 exports.registerUser = catchError (async (req, res, next) => {
     const {name, email, password} = req.body;
@@ -56,7 +45,7 @@ exports.loginUser = catchError ( async (req, res, next) => {
     if (!user) {
         return next(new ErrorHandler("Invalid email or password", 401));
     }
-    if (!user.email_verify)
+    if (!user.email_verified)
     {
         return next(new ErrorHandler("Your email is not verified. Please verify it once.", 401));
     }
@@ -233,3 +222,52 @@ exports.verificationLink = catchAsyncError(async (req, res, next) => {
         message : "A verification link has been shared on your registered email"
     });
 });
+
+// Admin Routes
+
+// List all users
+exports.listUsers = catchError( async (req, res, next) => {
+    const users = await User.find();
+    if (!users) {
+        return next(new ErrorHandler("No users found", 404));
+    }
+    res.json({
+        status : true,
+        users
+    });
+});
+
+// Get Single User
+
+exports.getSingleUser = catchAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+    if(!user) {
+        return next(new ErrorHandler("User not found", 404));
+    }
+
+    res.status(200).json({
+        status : true, 
+        user
+    });
+});
+
+
+// Update Role
+exports.updateRole = catchAsyncError(async (req, res, next) => {
+    let user = await User.findById(req.body.id);
+    if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+    }
+
+    user.role = req.body.role;
+    user = await user.save({
+        validateBeforeSave : false,
+        new : true
+    });
+    res.status(200).json({
+        status : true,
+        message : "User role updated successfully",
+        user
+    });
+})
+

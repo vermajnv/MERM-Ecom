@@ -192,7 +192,7 @@ exports.verifyEmail = catchAsyncError(async (req, res, next) => {
     });
 
     if(!user) {
-        next( new ErrorHandler("Email Varification Link has been expired. Please try again", 401));
+        return next( new ErrorHandler("Email Verification Link has been expired. Please try again", 401));
     }
     user.emailVerificationToken = undefined;
     user.emailVerificationExpires = undefined;

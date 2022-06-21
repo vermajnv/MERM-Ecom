@@ -4,6 +4,8 @@ const ErrorHandler = require('../utils/errorHandler');
 const JwtToken = require('../utils/JwtToken');
 const SendMail = require('../utils/SendEmail');
 const catchAsyncError = require('../middleware/catchAsyncError');
+const {sendVerificationEmail} = require('../middleware/auth');
+
 exports.listUsers = catchError( async (req, res, next) => {
     const users = await User.find();
     if (!users) {
@@ -27,10 +29,19 @@ exports.registerUser = catchError (async (req, res, next) => {
             url : "xys.com"
         }
     });
-
-    new JwtToken().getToken(res, user, 201, () => {
-
+    user.getCryptoToken('emailVerificationToken', 'emailVerificationExpires');
+    await user.save({
+        validateBeforeSave : false,
+        new : true
     });
+    
+    const verificationLink = `${req.protocol}://${req.get('host')}/api/v1/user/varify-email/${user.emailVerificationToken}`;
+    await sendVerificationEmail(req, res, next, user, verificationLink);
+    res.status(200).json({
+        status : true,
+        message : "A verification email has been shared on your email",
+        user
+    })
 });
 
 // Login user
@@ -76,7 +87,7 @@ exports.forgotPassword = catchError (async (req, res, next) => {
         return next(new ErrorHandler("Email not found"));
     }
 
-    const resetToken = await user.getResetPasswordToken();
+    const resetToken = await user.getCryptoToken('resetPasswordToken', 'resetPasswordExpires');
     user.save({validateBeforeSave : false});
 
     const resetPasswordLink = `${req.protocol}://${req.get('host')}/api/v1/reset-password/${resetToken}`;
@@ -168,4 +179,24 @@ exports.updateProfile = catchAsyncError(async (req, res, next) => {
         status : true, 
         user
     });
+});
+
+// Varify Email
+
+exports.verifyEmail = catchAsyncError(async (req, res, next) => {
+    const user = await User.findOne({
+        emailVerificationToken : req.params.token,
+        emailVerificationExpires : { $gt : Date.now()}
+    });
+
+    if(!user) {
+        next( new ErrorHandler("Email Varification Link has been expired. Please try again", 401));
+    }
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
+    user.email_verified = true;
+    await user.save({
+        validateBeforeSave : false
+    })
+    new JwtToken().getToken(res, user, 200);
 })

@@ -284,11 +284,25 @@ exports.updateProfileByAdmin = catchAsyncError(async (req, res, next) => {
     if(!user) {
         return next(new ErrorHandler("Invalid data", 400));
     }
-    
+
     res.json({
         status : true, 
         user
     });
 });
 
+exports.deleteUser = catchAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
 
+    if(!user)
+    {
+        return next(new ErrorHandler("User not found", 404));
+    }
+
+    await user.remove();
+    res.status(200).json({
+        stauts : true,
+        message : "User deleted successfully"
+    });
+    
+})

@@ -89,7 +89,7 @@ const productSchema = new mongoose.Schema({
     timestamps : true
 })
 
-productSchema.post("save", async function(doc, next) {
+productSchema.pre("save", async function(next) {
     if(!this.isModified("reviews"))
     {
         next();
@@ -98,7 +98,7 @@ productSchema.post("save", async function(doc, next) {
     const ratingSum = this.reviews.reduce((sum, next) => {
         return sum + next.rating;
     }, 0);
-    this.ratings = ratingSum / this.numOfReviews;
+    this.ratings = (Number(this.numOfReviews) === 0) ? 0 : ratingSum / this.numOfReviews;
     next();
 })
 module.exports = mongoose.model('Product', productSchema);

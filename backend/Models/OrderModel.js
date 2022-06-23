@@ -27,8 +27,13 @@ const orderSchema = new mongoose.Schema({
             required : true
         }
     },
-    order_items : [
+    orderItems : [
         {
+            product : {
+                type : mongoose.Schema.ObjectId,
+                ref : "Product",
+                default : null
+            },
             name : {
                 type : String,
                 required : true
@@ -36,11 +41,6 @@ const orderSchema = new mongoose.Schema({
             price : {
                 type : Number,
                 required : true
-            },
-            product : {
-                type : mongoose.Schema.ObjectId,
-                ref : "Product",
-                default : null
             },
             quantity : {
                 Type : Number,
@@ -69,7 +69,6 @@ const orderSchema = new mongoose.Schema({
         paidAt : {
             type : Date,
             default : null,
-            required : true
         }
     },
     status : {
@@ -86,7 +85,7 @@ const orderSchema = new mongoose.Schema({
         default : 0,
         required : true
     },
-    shippingCharge : {
+    shippingPrice : {
         type : Number,
         default : 0,
         required : true
@@ -104,4 +103,12 @@ const orderSchema = new mongoose.Schema({
     timestamps : true
 });
 
+orderSchema.pre('save', async function(next) {
+    if (!this.isModified("paymentInfo")) {
+        next();
+    }
+
+    this.paymentInfo.paidAt = Date.now();
+    next();
+})
 module.exports = mongoose.model('Order', orderSchema);

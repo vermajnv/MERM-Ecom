@@ -90,6 +90,22 @@ exports.myOrders = catchAsyncError(async (req, res, next) => {
     });
 });
 
+exports.deleteOrder = catchAsyncError(async (req, res, next) => {
+    let order = await Order.findById(req.params.id);
+
+    if(!order)
+    {
+        return next(new ErrorHandler("Order not found.", 404));
+    }
+
+    order = await order.remove();
+    res.status(200).json({
+        status : true,
+        message : "Order deleted successfully."
+    });
+});
+
+
 const updateStock = async (orderItems) =>
 {
     orderItems.forEach(async (item) => {

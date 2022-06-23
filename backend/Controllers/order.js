@@ -2,6 +2,8 @@ const Order = require('../Models/OrderModel');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const ErrorHandler = require('../utils/errorHandler');
 
+// Admin Routes
+
 exports.getOrders = catchAsyncError(async (req, res, next) => {
     const orders = await Order.find();
     if(!orders)
@@ -11,6 +13,18 @@ exports.getOrders = catchAsyncError(async (req, res, next) => {
     res.status(200).json({
         status : true,
         orders
+    });
+});
+
+exports.getOrder = catchAsyncError(async (req, res, next) => {
+    const order = await Order.findById(req.params.id);
+    if(!order)
+    {
+        return next(new ErrorHandler(`No order found with id ${req.params.id}`, 404));
+    }
+    res.status(200).json({
+        status : true,
+        order
     });
 });
 

@@ -43,8 +43,9 @@ const orderSchema = new mongoose.Schema({
                 required : true
             },
             quantity : {
-                Type : Number,
-                default : 0
+                type : Number,
+                default : 0,
+                required : true
             },
             image : {
                 type : String,
@@ -104,11 +105,16 @@ const orderSchema = new mongoose.Schema({
 });
 
 orderSchema.pre('save', async function(next) {
-    if (!this.isModified("paymentInfo")) {
+    if (this.isModified("paymentInfo")) {
+        this.paymentInfo.paidAt = Date.now();
         next();
     }
-
-    this.paymentInfo.paidAt = Date.now();
+    if(this.status === 'delivered')
+    {
+        this.deliveredAt = Date.now();
+        next();
+    }
     next();
-})
+});
+
 module.exports = mongoose.model('Order', orderSchema);

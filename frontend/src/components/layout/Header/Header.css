@@ -1,0 +1,25 @@
+.headerMaster{
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: space-between;
+    right: 1rem;
+    width: 8%;
+    top: 3rem;
+}
+
+.HeaderIcons {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    height: 10rem;
+}
+.HeaderIcons svg {
+    fill: rgba(35, 35, 35,0.8);
+    width: 30px;
+    height: 30px;
+}
+.HeaderIcons svg:hover {
+    cursor: pointer;
+    fill: #eb4034;
+}

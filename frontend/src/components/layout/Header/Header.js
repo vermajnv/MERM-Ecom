@@ -1,6 +1,5 @@
 import React from 'react'
 import { ReactNavbar } from 'overlay-navbar';
-import { CgProfile} from "react-icons/cg";
 import { MdShoppingCart, MdSearch, MdPersonOutline } from "react-icons/md";
 import logo  from '../../../images/logo.png';
 

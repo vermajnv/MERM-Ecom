@@ -56,3 +56,11 @@
     margin: 5vmax auto;
     padding: 1vmax;
 }
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vmax;
+}

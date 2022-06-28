@@ -4,7 +4,7 @@
     left: 0;
     height: 100vh;
     width: 100%;
-    background: linear-gradient(-135deg, #c850c0, #a921f7);
+    background: linear-gradient(-135deg, #c850c0, rgb(247 33 167 / 73%));
     clip-path: circle(25px at calc(100% - 45px) 45px);
     transition: all 0.3s ease-in-out;
     overflow: hidden;
@@ -23,12 +23,12 @@
     position: absolute;
     right: 20px;
     top: 20px;
-    z-index: 2;
+    z-index: 200;
     text-align: center;
     line-height: 50px;
     height: 50px;
     width: 50px;
-    background: linear-gradient(-135deg, #c850c0, #a921f7);
+    background: linear-gradient(-135deg, #c850c0, rgb(247 33 167 / 73%));
     color: #fff;
     font-size: 20px;
     cursor: pointer;

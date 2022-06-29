@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './Navbar.css';
 import { FaBars } from "react-icons/fa";
+import { MdShoppingCart, MdSearch, MdPersonOutline } from "react-icons/md";
 
 const Navbar = () => {
     const [isToggledOverlay, setToggledOverlay] = useState(false);
@@ -12,8 +13,13 @@ const Navbar = () => {
     }
   return (
     <div className={isToggledOverlay ? 'wrapper wrapper-overlay' : 'wrapper'}>
-        <div className='menu-btn' onClick={toggleOverlay}>
+        <div className='menu-btn' onClick={toggleOverlay}> 
             <FaBars></FaBars>
+        </div>
+        <div className='navIcon'>
+            <MdPersonOutline></MdPersonOutline>
+            <MdSearch></MdSearch>
+            <MdShoppingCart></MdShoppingCart>
         </div>
         <ul>
             <li><a href="/">Home</a></li>

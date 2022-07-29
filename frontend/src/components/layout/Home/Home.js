@@ -1,17 +1,18 @@
-import React from 'react'
 import {CgMouse} from 'react-icons/all';
 import './Home.css';
 import Product from '../../product/Product.js';
 import MetaData from '../MetaData';
-
-const product = {
-  name : "Blue TShirts",
-  images : [{ url : "https://i.ibb.co/DRST11n/1.webp"}],
-  price : 3000,
-  _id : "sdkfhsk098"
-};
+import { getProducts } from '../../../ReduxStorage/actions/ProductAction';
+import {useDispatch, useSelector} from 'react-redux';
+import { useEffect } from 'react';
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const {loading, products, productsCount, error} = useSelector(state => state.products)
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+  
   return (
     <>
     <MetaData title="Home Page"></MetaData>
@@ -24,14 +25,11 @@ const Home = () => {
     </div>
     <h2 className='homeHeading' id="featuredProduct">Featured Products</h2>
     <div className="container" id="container">
-      <Product product={product}></Product>
-      <Product product={product}></Product>
-      <Product product={product}></Product>
-      <Product product={product}></Product>
-      <Product product={product}></Product>
-      <Product product={product}></Product>
-      <Product product={product}></Product>
-      <Product product={product}></Product>
+      {
+        products && products.map(product => (
+          <Product product={product} key={product._id}></Product>
+        ))
+      }
     </div>
     </>
   )

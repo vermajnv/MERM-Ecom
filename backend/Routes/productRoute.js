@@ -4,7 +4,8 @@ const {isAuthenticated, authoriseRole} = require('../middleware/auth');
 
 const Router = express.Router();
 
-Router.route('/').get(isAuthenticated, getAllProducts);
+// Router.route('/').get(isAuthenticated, getAllProducts);
+Router.route('/').get(getAllProducts);
 Router.route('/create').post(isAuthenticated, authoriseRole("admin"), createProduct);
 Router.route('/add-review').put(isAuthenticated, createProductReview);
 Router.route('/review/:productId').get(getReview).delete(deleteReview);

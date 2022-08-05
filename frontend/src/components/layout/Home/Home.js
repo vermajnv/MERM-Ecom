@@ -6,13 +6,19 @@ import { getProducts } from '../../../ReduxStorage/actions/ProductAction';
 import {useDispatch, useSelector} from 'react-redux';
 import { useEffect } from 'react';
 import Loader from '../Loader/loader';
+import { useAlert } from '@blaumaus/react-alert';
 
 const Home = () => {
+  const alert = useAlert();
   const dispatch = useDispatch();
   const {loading, products, productsCount, error} = useSelector(state => state.products)
   useEffect(() => {
+    if(error)
+    {
+      return alert.error(error);
+    }
     dispatch(getProducts());
-  }, [dispatch]);
+  }, [dispatch, error]);
   
   return (
     <>

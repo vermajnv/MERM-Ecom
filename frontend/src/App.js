@@ -3,7 +3,7 @@ import React from 'react';
 import Header from './components/layout/Header/Header';
 import Footer from './components/layout/Footer/Footer';
 import Home from './components/layout/Home/Home';
-import ProductDetails from './components/layout/Product/ProductDetails';
+import ProductDetails from './components/product/ProductDetails';
 
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import WebFont from 'webfontloader';

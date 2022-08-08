@@ -1,12 +1,12 @@
 import React, { Fragment, useEffect } from 'react'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-// import { productReducer } from '../../../ReduxStorage/reducers/ProductReducer';
 import { Carousel } from 'react-responsive-carousel';
 import './ProductDetails.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {getProductDetails} from '../../ReduxStorage/actions/ProductDetailsAction';
 import { useParams } from 'react-router-dom';
 import ReactStars from 'react-rating-stars-component';
+import ReviewCard from './ReviewCard';
 
 const ProductDetails = () => {
 
@@ -78,6 +78,16 @@ const ProductDetails = () => {
                 </button>
             </div>
         </div>
+        <h3 className="productHeading">Reviews</h3>
+        {product.reviews && product.reviews[0] ? (
+            <div className="reviews">
+                {product.reviews && product.reviews.map((review) => (
+                    <ReviewCard></ReviewCard>
+                ))}
+            </div>
+        ) : (
+            <p className="noReviews">No Reviews Yet</p>
+        )}
     </Fragment>
   )
 }

@@ -78,11 +78,11 @@ const ProductDetails = () => {
                 </button>
             </div>
         </div>
-        <h3 className="productHeading">Reviews</h3>
+        <h3 className="reviewHeading">Reviews</h3>
         {product.reviews && product.reviews[0] ? (
             <div className="reviews">
-                {product.reviews && product.reviews.map((review) => (
-                    <ReviewCard></ReviewCard>
+                {product.reviews && product.reviews.map((review, key) => (
+                    <ReviewCard review={review} key={key}></ReviewCard>
                 ))}
             </div>
         ) : (

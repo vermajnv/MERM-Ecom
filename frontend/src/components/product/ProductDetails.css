@@ -1,5 +1,5 @@
 .productDetails {
-    background-color: rgb(214, 214, 214);
+    background-color: rgb(255, 255, 255);
     width: 100vw;
     max-width: 100%;
     padding: 6vmax;
@@ -147,6 +147,29 @@
 .submitReview:hover {
     background-color: rgba(214, 84, 62, 0.776);
     transform: scale(1.1);
+}
+
+.reviews {
+    display: flex;
+    overflow: auto;
+}
+
+.reviewHeading {
+    color: rgba( 17, 17, 17, 0.695);
+    font : 400 1.8vmax "Franklin Gothic Medium";
+    margin: 1vmax 0;
+    text-align: center;
+    margin: auto;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.264);
+    width: 20vmax;
+    padding: 0.8vmax;
+}
+
+.noReviews {
+    font : 400 1.3vmax "Gill Sans";
+    text-align: center;
+    color: rgba(0, 0, 0, 0.456);
+    margin-top: 1vmax;
 }
 
 @media screen and (max-width : 600px){

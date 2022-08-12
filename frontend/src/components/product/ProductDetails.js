@@ -3,14 +3,15 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import './ProductDetails.css';
 import {useDispatch, useSelector} from 'react-redux';
-import {getProductDetails} from '../../ReduxStorage/actions/ProductDetailsAction';
+import {clearErrors, getProductDetails} from '../../ReduxStorage/actions/ProductDetailsAction';
 import { useParams } from 'react-router-dom';
 import ReactStars from 'react-rating-stars-component';
 import ReviewCard from './ReviewCard';
 import Loader from '../layout/Loader/loader';
+import {useAlert} from '@blaumaus/react-alert';
 
 const ProductDetails = () => {
-
+    const alert = useAlert();
     const {id} = useParams();
     
     const dispatch = useDispatch();
@@ -25,8 +26,12 @@ const ProductDetails = () => {
         color : "rgba(20, 20, 20, 0.1)"
     };
     useEffect(() => {
+        if (error) {
+            alert.error(error);
+            dispatch(clearErrors());
+        }
         dispatch(getProductDetails(id))
-    }, [dispatch, id]);
+    }, [dispatch, id, error, alert]);
     
   return ( 
     <Fragment>

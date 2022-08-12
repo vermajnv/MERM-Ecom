@@ -7,6 +7,7 @@ import ProductDetails from './components/product/ProductDetails';
 
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import WebFont from 'webfontloader';
+import Products from './components/product/Products';
 
 function App() {
     React.useEffect(() => {
@@ -25,6 +26,7 @@ function App() {
 
                 </Route>
                 <Route exact path='/product/:id' element={<ProductDetails></ProductDetails>}></Route>
+                <Route exact path='/products' element={<Products></Products>}></Route>
             </Routes>
             <Footer></Footer>
         </Router>

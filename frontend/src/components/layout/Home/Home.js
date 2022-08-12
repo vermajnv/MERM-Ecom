@@ -1,6 +1,6 @@
 import {CgMouse} from 'react-icons/all';
 import './Home.css';
-import Product from '../../product/Product.js';
+import ProductCard from '../../product/ProductCard.js';
 import MetaData from '../MetaData';
 import { getProducts } from '../../../ReduxStorage/actions/ProductAction';
 import {useDispatch, useSelector} from 'react-redux';
@@ -38,7 +38,7 @@ const Home = () => {
       <div className="container" id="container">
         {
           products && products.map(product => (
-            <Product product={product} key={product._id}></Product>
+            <ProductCard product={product} key={product._id}></ProductCard>
           ))
         }
       </div>

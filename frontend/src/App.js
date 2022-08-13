@@ -27,6 +27,7 @@ function App() {
                 </Route>
                 <Route exact path='/product/:id' element={<ProductDetails></ProductDetails>}></Route>
                 <Route exact path='/products' element={<Products></Products>}></Route>
+                <Route path='/products/:keyword' element={<Products></Products>}></Route>
                 <Route exact path='/search' element={<Search></Search>}></Route>
             </Routes>
             <Footer></Footer>

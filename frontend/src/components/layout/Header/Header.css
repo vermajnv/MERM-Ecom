@@ -6,6 +6,7 @@
     right: 1rem;
     width: 8%;
     top: 3rem;
+    z-index: 300;
 }
 
 .HeaderIcons {
@@ -14,6 +15,7 @@
     justify-content: space-between;
     height: 10rem;
 }
+
 .HeaderIcons svg {
     fill: rgba(35, 35, 35,0.8);
     width: 30px;

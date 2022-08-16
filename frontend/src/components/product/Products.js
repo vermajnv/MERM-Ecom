@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import Loader from '../layout/Loader/loader'
 import {useDispatch, useSelector} from 'react-redux';
 import { getProducts, clearErrors} from '../../ReduxStorage/actions/ProductAction';
@@ -6,20 +6,28 @@ import ProductCard from './ProductCard';
 import './Products.css';
 import { useAlert } from '@blaumaus/react-alert';
 import { useParams } from 'react-router-dom';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
 
 const Products = () => {
+    const [page, setPage] = useState(1);
     const dispatch = useDispatch();
     const alert = useAlert();
     const {keyword} = useParams();
-    const {products, loading, error} = useSelector((state) => state.products);
+    const {products, loading, error, totalPages} = useSelector((state) => state.products);
+    const handleChange = (e, value) => {
+        setPage(value);
+        window.scroll(0, 0);
+    }
     useEffect(() => {
         if(error)
         {
             alert.error(error);
             dispatch(clearErrors());
         }
-        dispatch(getProducts(keyword));
-    }, [dispatch, error, alert, keyword]);
+        dispatch(getProducts(keyword, page));
+    }, [dispatch, error, alert, keyword, page]);
 
     return (
         <Fragment>
@@ -30,6 +38,11 @@ const Products = () => {
                         {products && products.map((product) => (
                             <ProductCard product={product}></ProductCard>
                         ))}
+                    </div>
+                    <div className='paginationBox'>
+                        <Stack spacing={2}>
+                            <Pagination count={totalPages} page={page} onChange={handleChange} />
+                        </Stack>
                     </div>
                 </Fragment>
             )}

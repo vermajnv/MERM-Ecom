@@ -13,3 +13,8 @@
     padding: 0 5vmax;
     justify-content: center;
 }
+
+.paginationBox {
+    display: flex;
+    justify-content: center;
+}

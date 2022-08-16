@@ -15,13 +15,17 @@ exports.createProduct = catchAsyncError (async (req, res, mext) => {
 
 // Get all products
 exports.getAllProducts = catchAsyncError (async (req, res, next) => {
-    const productHelper = new ProductHelper(Product, req.query).search().filter().paginate(process.env.PAGINATION);
+    const productHelper = new ProductHelper(Product, req.query).search().filter();
+    let products = await productHelper.query.clone();
+    const filteredProductCount = products.length; // Length of data after filter
+    productHelper.paginate(process.env.PAGINATION);
     const productCount = await Product.countDocuments();
-    const products = await productHelper.query;
+    products = await productHelper.query;
     res.status(200).json({
         success : true,
         count : productCount,
-        totalPages : Math.ceil(productCount / parseInt(process.env.PAGINATION)),
+        totalPages : Math.ceil(filteredProductCount / parseInt(process.env.PAGINATION)),
+        filteredProductCount,
         products
     });
 });

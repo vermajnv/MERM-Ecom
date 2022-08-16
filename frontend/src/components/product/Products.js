@@ -6,12 +6,13 @@ import ProductCard from './ProductCard';
 import './Products.css';
 import { useAlert } from '@blaumaus/react-alert';
 import { useParams } from 'react-router-dom';
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-
+import {Pagination, Stack, Slider, Typography} from '@mui/material';
+// import Stack from '@mui/material/Stack';
+// import Slider from '@mui/material/Slider';
 
 const Products = () => {
     const [page, setPage] = useState(1);
+    const [price, setPrice] = useState([0, 25000]);
     const dispatch = useDispatch();
     const alert = useAlert();
     const {keyword} = useParams();
@@ -20,15 +21,19 @@ const Products = () => {
         setPage(value);
         window.scroll(0, 0);
     }
+
+    const priceHandler = (event, newPrice) => {
+        setPrice(newPrice);
+    }
+
     useEffect(() => {
         if(error)
         {
             alert.error(error);
             dispatch(clearErrors());
         }
-        dispatch(getProducts(keyword, page));
-    }, [dispatch, error, alert, keyword, page]);
-
+        dispatch(getProducts(keyword, page, price));
+    }, [dispatch, error, alert, keyword, page, price]);
     return (
         <Fragment>
             {loading ? <Loader/> : (
@@ -37,7 +42,7 @@ const Products = () => {
                     <div className="productContainer">
                         {products && products.map((product) => (
                             <ProductCard product={product}></ProductCard>
-                        ))}
+                        )) }
                     </div>
                     {totalPages > 1 && (
                     <div className='paginationBox'>
@@ -46,6 +51,19 @@ const Products = () => {
                         </Stack>
                     </div>
                     )}
+                    <div className="filterBox">
+                        <Typography>
+                            Price
+                        </Typography>
+                        <Slider
+                            value={price}
+                            onChange={priceHandler}
+                            valueLabelDisplay="auto"
+                            min={0}
+                            max={25000}
+                            size="small"
+                        />
+                    </div>
                 </Fragment>
             )}
         </Fragment>

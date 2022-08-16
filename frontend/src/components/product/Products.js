@@ -44,13 +44,6 @@ const Products = () => {
                             <ProductCard product={product}></ProductCard>
                         )) }
                     </div>
-                    {totalPages > 1 && (
-                    <div className='paginationBox'>
-                        <Stack spacing={2}>
-                            <Pagination count={totalPages} page={page} onChange={handleChange} />
-                        </Stack>
-                    </div>
-                    )}
                     <div className="filterBox">
                         <Typography>
                             Price
@@ -64,6 +57,13 @@ const Products = () => {
                             size="small"
                         />
                     </div>
+                    {totalPages > 1 && (
+                    <div className='paginationBox'>
+                        <Stack spacing={2}>
+                            <Pagination count={totalPages} page={page} onChange={handleChange} />
+                        </Stack>
+                    </div>
+                    )}
                 </Fragment>
             )}
         </Fragment>

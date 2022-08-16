@@ -10,11 +10,18 @@
 .productContainer {
     display: flex;
     flex-wrap: wrap;
-    padding: 0 5vmax;
+    padding: 0 15vmax;
     justify-content: center;
 }
 
 .paginationBox {
     display: flex;
     justify-content: center;
+}
+
+.filterBox {
+    width: 10vmax;
+    position: absolute;
+    top: 10vmax;
+    left: 4vmax;
 }

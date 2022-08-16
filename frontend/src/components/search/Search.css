@@ -22,10 +22,11 @@
     border-radius: 0%;
     font: 300 1.1vmax "sans serif";
     box-sizing: border-box;
+    height: 8%;
 }
 
 .searchBox > input[type='submit'] {
-    height: 14%;
+    height: 8%;
     border-radius: 0%;
     background-color: tomato;
     border: none;

@@ -9,6 +9,7 @@ import ReactStars from 'react-rating-stars-component';
 import ReviewCard from './ReviewCard';
 import Loader from '../layout/Loader/loader';
 import {useAlert} from '@blaumaus/react-alert';
+import MetaData from '../layout/MetaData';
 
 const ProductDetails = () => {
     const alert = useAlert();
@@ -38,6 +39,7 @@ const ProductDetails = () => {
         {loading ? <Loader></Loader> : (
 
         <Fragment>
+            <MetaData title={`Product : ${product.name}`}></MetaData>
             <div className="productDetails">
                 <div>
                     <Carousel width={'40%'} showThumbs={false}>

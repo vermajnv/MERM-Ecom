@@ -6,6 +6,8 @@ import Home from './components/layout/Home/Home';
 import ProductDetails from './components/product/ProductDetails';
 import Products from './components/product/Products';
 import Search from './components/search/Search';
+import LoginSignUp from './components/User/LoginSignUp';
+import ForgetPassword from './components/User/ForgetPassword';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import WebFont from 'webfontloader';
 
@@ -29,6 +31,8 @@ function App() {
                 <Route exact path='/products' element={<Products></Products>}></Route>
                 <Route path='/products/:keyword' element={<Products></Products>}></Route>
                 <Route exact path='/search' element={<Search></Search>}></Route>
+                <Route exact path='/login' element={<LoginSignUp></LoginSignUp>}></Route>
+                <Route exact path='/password/forgot' element={<ForgetPassword></ForgetPassword>}></Route>
             </Routes>
             <Footer></Footer>
         </Router>

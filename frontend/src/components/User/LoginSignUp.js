@@ -1,11 +1,19 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './LoginSignUp.css';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FaceIcon from '@mui/icons-material/FaceOutlined';
+import { login, clearError, register } from '../../ReduxStorage/actions/UserAction';
+import {useDispatch, useSelector} from 'react-redux';
+import {useAlert} from '@blaumaus/react-alert';
+import Loader from '../layout/Loader/loader';
 
 const LoginSignUp = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const alert = useAlert();
+    const {error, loading, isAuthenticated} = useSelector(state => state.user);
     const loginTab = useRef(null);
     const registerTab = useRef(null);
     const switcherTab = useRef(null);
@@ -41,8 +49,9 @@ const LoginSignUp = () => {
         }
     }
 
-    const loginSubmit = () => {
-        console.log('Login Submit');
+    const loginSubmit = (e) => {
+        e.preventDefault();
+        dispatch(login(loginEmail, loginPassword));
     }
 
     const registerSubmit = (e) => {
@@ -52,11 +61,10 @@ const LoginSignUp = () => {
         form.set('email', email);
         form.set('password', password);
         form.set('avatar', avatar);
-        console.log('Sign update submit');
+        dispatch(register(form));
     }
 
     const registerDataChanges = (e) => {
-        console.log('This is register Data Changes');
         if(e.target.name === 'avatar')
         {
             const reader = new FileReader();
@@ -77,8 +85,20 @@ const LoginSignUp = () => {
         }
     }
 
+    useEffect(() => {
+        if(error) {
+            alert.error(error);
+            dispatch(clearError());
+        }
+        if(isAuthenticated) {
+            navigate('/account');
+        }
+    }, [alert, error, dispatch, isAuthenticated, navigate])
+
     return (
         <>
+            {loading ? <Loader /> : (
+
             <div className="loginSignUpContainer">
                 <div className="loginSignUpBox">
                     <div>
@@ -170,6 +190,7 @@ const LoginSignUp = () => {
                     </form>
                 </div>
             </div>
+            )}
         </>
     )
 }

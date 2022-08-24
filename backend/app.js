@@ -1,6 +1,8 @@
 const express = require('express');
 const errorMiddleware = require('./middleware/error');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 
 const app = express();
 
@@ -11,6 +13,8 @@ const orders = require('./Routes/orderRoute');
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended : true}));
+app.use(fileUpload());
 app.use('/api/v1/product', products);
 app.use('/api/v1/user', users);
 app.use('/api/v1/order', orders);

@@ -5,17 +5,25 @@ const JwtToken = require('../utils/JwtToken');
 const SendMail = require('../utils/SendEmail');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const {sendVerificationEmail} = require('../middleware/auth');
+const cloudinary = require('cloudinary');
 
 // Register user
 exports.registerUser = catchError (async (req, res, next) => {
     const {name, email, password} = req.body;
+    console.log(req.body.avatar);
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder : "avatar",
+        width : 150,
+        crop : "scale"
+    });
+
     const user = await User.create({
         name : name,
         email : email,
         password : password,
         avatar : {
-            public_id : "sdfsjd90",
-            url : "xys.com"
+            public_id : myCloud.public_id,
+            url : myCloud.secure_url
         }
     });
     user.getCryptoToken('emailVerificationToken', 'emailVerificationExpires');
